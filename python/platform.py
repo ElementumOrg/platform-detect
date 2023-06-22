@@ -3,26 +3,26 @@ import os
 from ctypes import c_int, cdll
 
 platforms = {
-  'android': [
-    'arm64',
-    'arm',
-    'x64',
-    'x86'
-  ],
-  'linux': [
-    'arm64',
-    'armv7',
-    'armv6',
-    'x64',
-    'x86'
-  ],
-  'windows': [
-    'x64',
-    'x86'
-  ],
-  'darwin': [
-    'x64'
-  ]
+    'android': [
+        'arm64',
+        'arm',
+        'x64',
+        'x86'
+    ],
+    'linux': [
+        'arm64',
+        'armv7',
+        'armv6',
+        'x64',
+        'x86'
+    ],
+    'windows': [
+        'x64',
+        'x86'
+    ],
+    'darwin': [
+        'x64'
+    ]
 }
 
 
