@@ -30,16 +30,12 @@ platforms = {
 # Proper library should return '42' as a result to a 'int test()' method call.
 # We give preference to a 'higher' arch (x64 over x96, arm64 over armv7, etc).
 def detect_platform():
-    base_dir = os.path.join(os.path.dirname(__file__), "..")
-
     for system in platforms.keys():
         for arch in platforms.get(system):
             try:
-                library_folder = os.path.join(base_dir, "libraries", system + "_" + arch)
-                if os.path.exists(os.path.join(library_folder, "test.dll")):
-                    library_path = os.path.join(library_folder, "test.dll")
-                else:
-                    library_path = os.path.join(library_folder, "test.so")
+                library_path = get_library_path(system, arch)
+                if not library_path:
+                    continue
 
                 # Try to load a library
                 lib = cdll.LoadLibrary(library_path)
@@ -65,4 +61,21 @@ def detect_platform():
                     return system + "-" + arch
             except:
                 pass
+    return None
+
+def get_library_path(system, arch):
+    sub_dir = system + "_" + arch
+
+    base_dir = os.path.dirname(__file__)
+    if os.path.exists(os.path.join(base_dir, "libraries", sub_dir, "test.dll")):
+        return os.path.join(base_dir, "libraries", sub_dir, "test.dll")
+    elif os.path.exists(os.path.join(base_dir, "libraries", sub_dir, "test.so")):
+        return os.path.join(base_dir, "libraries", sub_dir, "test.so")
+
+    base_dir = os.path.join(os.path.dirname(__file__), "..")
+    if os.path.exists(os.path.join(base_dir, "libraries", sub_dir, "test.dll")):
+        return os.path.join(base_dir, "libraries", sub_dir, "test.dll")
+    elif os.path.exists(os.path.join(base_dir, "libraries", sub_dir, "test.so")):
+        return os.path.join(base_dir, "libraries", sub_dir, "test.so")
+
     return None
