@@ -45,17 +45,25 @@ def detect_platform():
                 result = lib.test()
 
                 # Close the library, to avoid locking the file by a process
-                if '.so' in library_path:
-                    try:
-                        lib.dlclose(lib._handle)
-                    except:
-                        pass
-                else:
+                # TODO: removing library close for Linux for now, due to reported segfaults
+                if '.so' not in library_path:
                     try:
                         from ctypes import windll
                         windll.kernel32.FreeLibrary(lib._handle)
                     except:
                         pass
+
+                # if '.so' in library_path:
+                #     try:
+                #         lib.dlclose(lib._handle)
+                #     except:
+                #         pass
+                # else:
+                #     try:
+                #         from ctypes import windll
+                #         windll.kernel32.FreeLibrary(lib._handle)
+                #     except:
+                #         pass
 
                 if result and result == 42:
                     return system + "-" + arch
