@@ -1,6 +1,9 @@
 CC = cc
 CXX = c++
 
+COMPILE_ARGS = 
+LIBRARY_ARGS = 
+
 ifneq ($(CROSS_TRIPLE),)
 	CC := $(CROSS_TRIPLE)-$(CC)
 	CXX := $(CROSS_TRIPLE)-$(CXX)
@@ -22,6 +25,11 @@ else ifeq ($(TARGET_OS), android)
 	CXX := $(CROSS_ROOT)/bin/$(CROSS_TRIPLE)-clang++
 endif
 
+ifeq ($(TARGET_ARCH), armv7_softfp)
+	COMPILE_ARGS += -march=armv7-a -mfloat-abi=softfp
+	LIBRARY_ARGS += -march=armv7-a -mfloat-abi=softfp
+endif
+
 PROJECT = elementumorg
 NAME = test
 GIT = git
@@ -41,6 +49,7 @@ ANDROID_PLATFORMS = \
 LINUX_PLATFORMS = \
 	linux-armv6 \
 	linux-armv7 \
+	linux-armv7_softfp \
 	linux-arm64 \
 	linux-x64 \
 	linux-x86
@@ -78,6 +87,7 @@ $(LIBRARY_PATH)/$(OUTPUT_NAME): $(BUILD_PATH) $(LIBRARY_PATH) force
 	CFLAGS='$(CFLAGS)' \
 	CC='$(CC)' CXX='$(CXX)' \
 	$(CC) \
+		$(COMPILE_ARGS) \
 		-c -o '$(BUILD_PATH)/$(OBJECT_NAME)' \
 		src/test.c
 
@@ -86,6 +96,7 @@ $(LIBRARY_PATH)/$(OUTPUT_NAME): $(BUILD_PATH) $(LIBRARY_PATH) force
 	CFLAGS='$(CFLAGS)' \
 	CC='$(CC)' CXX='$(CXX)' \
 	$(CC) \
+		$(LIBRARY_ARGS) \
 		--shared -o '$(LIBRARY_PATH)/$(OUTPUT_NAME)' \
 		'$(BUILD_PATH)/$(OBJECT_NAME)'
 	chmod -R 777 $(BUILD_PATH)

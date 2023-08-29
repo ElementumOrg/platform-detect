@@ -12,6 +12,7 @@ platforms = {
     'linux': [
         'arm64',
         'armv7',
+        'armv7_softfp',
         'armv6',
         'x64',
         'x86'
